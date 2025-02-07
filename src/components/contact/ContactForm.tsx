@@ -2,8 +2,6 @@
 
 import { useState, FormEvent } from 'react';
 import { motion } from 'framer-motion';
-import emailjs from '@emailjs/browser';
-import { emailjsConfig } from '@/config/emailjs';
 
 export function ContactForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -16,19 +14,32 @@ export function ContactForm() {
     setError(null);
 
     try {
-      const form = e.currentTarget;
-      
-      await emailjs.sendForm(
-        emailjsConfig.serviceId,
-        emailjsConfig.templateId,
-        form,
-        emailjsConfig.publicKey
-      );
+      const formData = new FormData(e.currentTarget);
+      const data = {
+        user_name: formData.get('user_name'),
+        user_email: formData.get('user_email'),
+        message: formData.get('message')
+      };
+
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.details || result.error || 'Erreur lors de l\'envoi');
+      }
 
       setIsSent(true);
-      form.reset();
+      e.currentTarget.reset();
     } catch (err) {
-      setError('Une erreur est survenue. Veuillez réessayer plus tard.');
+      const errorMessage = err instanceof Error ? err.message : 'Une erreur est survenue. Veuillez réessayer plus tard.';
+      setError(errorMessage);
       console.error('Erreur lors de l\'envoi:', err);
     } finally {
       setIsLoading(false);
