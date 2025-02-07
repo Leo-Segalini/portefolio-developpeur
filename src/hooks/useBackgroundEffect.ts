@@ -23,9 +23,9 @@ export function useBackgroundEffect(
   const { mouseControl = true } = options;
 
   useEffect(() => {
-    if (!elementRef.current || typeof window === 'undefined') return;
+    if (!elementRef.current) return;
 
-    // Configuration initiale
+    const currentElement = elementRef.current;
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
       50,
@@ -43,7 +43,7 @@ export function useBackgroundEffect(
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(0x000000, 0);
-    elementRef.current.appendChild(renderer.domElement);
+    currentElement.appendChild(renderer.domElement);
 
     // Création des symboles de code
     const codeSymbols = ['<>', '/>', '{', '}', '()', '[]', '=>', ';;'];
@@ -195,8 +195,8 @@ export function useBackgroundEffect(
       if (mouseControl) {
         window.removeEventListener('mousemove', handleMouseMove);
       }
-      if (elementRef.current && renderer.domElement) {
-        elementRef.current.removeChild(renderer.domElement);
+      if (currentElement && renderer.domElement) {
+        currentElement.removeChild(renderer.domElement);
       }
       particlesSystems.forEach(particles => {
         particles.geometry.dispose();
