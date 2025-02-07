@@ -381,123 +381,124 @@ export function useCarrotEffect(
   const controlsRef = useRef<OrbitControls | null>(null);
 
   useEffect(() => {
-    if (!elementRef.current) return;
+    if (elementRef.current) {
+      const currentElement = elementRef.current;
+      const width = options.width || window.innerWidth;
+      const height = options.height || window.innerHeight;
 
-    const width = options.width || window.innerWidth;
-    const height = options.height || window.innerHeight;
+      // Configuration de base
+      const renderer = new THREE.WebGLRenderer({ 
+        alpha: true, 
+        antialias: true,
+        powerPreference: "high-performance"
+      });
+      const camera = new THREE.PerspectiveCamera(45, width/height, 1, 1000);
+      const scene = new THREE.Scene();
+      scene.fog = new THREE.Fog(0xd5f8f8, 150, 400);
 
-    // Configuration de base
-    const renderer = new THREE.WebGLRenderer({ 
-      alpha: true, 
-      antialias: true,
-      powerPreference: "high-performance"
-    });
-    const camera = new THREE.PerspectiveCamera(45, width/height, 1, 1000);
-    const scene = new THREE.Scene();
-    scene.fog = new THREE.Fog(0xd5f8f8, 150, 400);
+      // Configuration du rendu
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setClearColor(0xffffff, 0);
+      renderer.setSize(width, height);
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      currentElement.appendChild(renderer.domElement);
 
-    // Configuration du rendu
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setClearColor(0xffffff, 0);
-    renderer.setSize(width, height);
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    elementRef.current.appendChild(renderer.domElement);
+      // Configuration de la caméra
+      camera.position.set(60, 30, 120);
+      camera.rotation.set(-0.2, 0.3, 0.1);
+      scene.add(camera);
 
-    // Configuration de la caméra
-    camera.position.set(60, 30, 120);
-    camera.rotation.set(-0.2, 0.3, 0.1);
-    scene.add(camera);
+      // Contrôles
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.enabled = true;
+      controls.enableZoom = true;
+      controls.enablePan = false;
+      controls.minDistance = 50;
+      controls.maxDistance = 200;
+      controls.minPolarAngle = Math.PI / 4;
+      controls.maxPolarAngle = Math.PI / 1.5;
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
 
-    // Contrôles
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enabled = true;
-    controls.enableZoom = true;
-    controls.enablePan = false;
-    controls.minDistance = 50;
-    controls.maxDistance = 200;
-    controls.minPolarAngle = Math.PI / 4;
-    controls.maxPolarAngle = Math.PI / 1.5;
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
+      // Lumières
+      const directional = new THREE.DirectionalLight(0xffffff, 1.5);
+      directional.position.set(50, 50, 50);
+      directional.castShadow = true;
+      directional.shadow.mapSize.width = 1024;
+      directional.shadow.mapSize.height = 1024;
+      
+      const ambient = new THREE.AmbientLight(0xffffff, 1);
+      scene.add(ambient);
+      scene.add(directional);
 
-    // Lumières
-    const directional = new THREE.DirectionalLight(0xffffff, 1.5);
-    directional.position.set(50, 50, 50);
-    directional.castShadow = true;
-    directional.shadow.mapSize.width = 1024;
-    directional.shadow.mapSize.height = 1024;
-    
-    const ambient = new THREE.AmbientLight(0xffffff, 1);
-    scene.add(ambient);
-    scene.add(directional);
+      // Sol
+      const floor = new THREE.Mesh(
+        new THREE.PlaneGeometry(1000, 1000),
+        new THREE.MeshBasicMaterial({ 
+          color: 0xf5f5f5,
+          transparent: true,
+          opacity: 0.5
+        })
+      );
+      floor.rotation.x = -Math.PI / 2;
+      floor.position.y = -50;
+      scene.add(floor);
 
-    // Sol
-    const floor = new THREE.Mesh(
-      new THREE.PlaneGeometry(1000, 1000),
-      new THREE.MeshBasicMaterial({ 
-        color: 0xf5f5f5,
-        transparent: true,
-        opacity: 0.5
-      })
-    );
-    floor.rotation.x = -Math.PI / 2;
-    floor.position.y = -50;
-    scene.add(floor);
+      // Ajout des éléments
+      const carrot = new Carrot();
+      scene.add(carrot.mesh);
 
-    // Ajout des éléments
-    const carrot = new Carrot();
-    scene.add(carrot.mesh);
+      const clouds = [
+        new Cloud({ y: -5, z: 20 }),
+        new Cloud({ y: 0, z: 10, delay: 1 }),
+        new Cloud({ y: 15, z: -10, delay: 0.5 }),
+        new Cloud({ y: -15, z: 10, delay: 2 })
+      ];
+      clouds.forEach(cloud => scene.add(cloud.mesh));
 
-    const clouds = [
-      new Cloud({ y: -5, z: 20 }),
-      new Cloud({ y: 0, z: 10, delay: 1 }),
-      new Cloud({ y: 15, z: -10, delay: 0.5 }),
-      new Cloud({ y: -15, z: 10, delay: 2 })
-    ];
-    clouds.forEach(cloud => scene.add(cloud.mesh));
+      // Ajustement de la taille des éléments pour l'écran complet
+      const scaleRatio = Math.min(width, height) / 500;
+      carrot.mesh.scale.set(scaleRatio, scaleRatio, scaleRatio);
+      clouds.forEach(cloud => {
+        cloud.mesh.scale.set(scaleRatio, scaleRatio, scaleRatio);
+      });
 
-    // Ajustement de la taille des éléments pour l'écran complet
-    const scaleRatio = Math.min(width, height) / 500;
-    carrot.mesh.scale.set(scaleRatio, scaleRatio, scaleRatio);
-    clouds.forEach(cloud => {
-      cloud.mesh.scale.set(scaleRatio, scaleRatio, scaleRatio);
-    });
+      // Animation
+      const animate = () => {
+        requestAnimationFrame(animate);
+        controls.update();
+        renderer.render(scene, camera);
+      };
+      animate();
 
-    // Animation
-    const animate = () => {
-      requestAnimationFrame(animate);
-      controls.update();
-      renderer.render(scene, camera);
-    };
-    animate();
+      // Gestion du redimensionnement
+      const handleResize = () => {
+        const newWidth = options.width || window.innerWidth;
+        const newHeight = options.height || window.innerHeight;
 
-    // Gestion du redimensionnement
-    const handleResize = () => {
-      const newWidth = options.width || window.innerWidth;
-      const newHeight = options.height || window.innerHeight;
+        renderer.setSize(newWidth, newHeight);
+        camera.aspect = newWidth / newHeight;
+        camera.updateProjectionMatrix();
+      };
+      window.addEventListener('resize', handleResize);
 
-      renderer.setSize(newWidth, newHeight);
-      camera.aspect = newWidth / newHeight;
-      camera.updateProjectionMatrix();
-    };
-    window.addEventListener('resize', handleResize);
+      // Stockage des références
+      sceneRef.current = scene;
+      cameraRef.current = camera;
+      rendererRef.current = renderer;
+      controlsRef.current = controls;
 
-    // Stockage des références
-    sceneRef.current = scene;
-    cameraRef.current = camera;
-    rendererRef.current = renderer;
-    controlsRef.current = controls;
-
-    // Nettoyage
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      if (elementRef.current) {
-        elementRef.current.removeChild(renderer.domElement);
-      }
-      renderer.dispose();
-      controls.dispose();
-    };
+      // Nettoyage
+      return () => {
+        window.removeEventListener('resize', handleResize);
+        if (currentElement) {
+          currentElement.removeChild(renderer.domElement);
+        }
+        renderer.dispose();
+        controls.dispose();
+      };
+    }
   }, [elementRef, options.width, options.height]);
 
   return {

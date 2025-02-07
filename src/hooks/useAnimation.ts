@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { AnimationControls, useAnimation as useFramerAnimation, Variants } from 'framer-motion';
+import { useAnimation as useFramerAnimation, Variants } from 'framer-motion';
 
 // Types d'animations prédéfinies
 export type AnimationType = 'fadeIn' | 'fadeInUp' | 'fadeInDown' | 'scale' | 'slideIn' | 'custom';

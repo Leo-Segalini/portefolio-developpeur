@@ -1,15 +1,25 @@
 declare module 'vanta/dist/vanta.waves.min' {
-  import { Object3D } from 'three';
+  interface VantaWavesOptions {
+    el: HTMLElement;
+    mouseControls?: boolean;
+    touchControls?: boolean;
+    gyroControls?: boolean;
+    minHeight?: number;
+    minWidth?: number;
+    scale?: number;
+    scaleMobile?: number;
+    color?: number | string;
+    shininess?: number;
+    waveHeight?: number;
+    waveSpeed?: number;
+    zoom?: number;
+  }
 
-  interface VantaWavesEffect extends Object3D {
-    setOptions: (options: any) => void;
+  interface VantaWavesEffect {
     destroy: () => void;
+    setOptions: (options: Partial<VantaWavesOptions>) => void;
   }
 
-  interface VantaWavesConstructor {
-    (options: any): VantaWavesEffect;
-  }
-
-  const WAVES: VantaWavesConstructor;
+  const WAVES: (options: VantaWavesOptions) => VantaWavesEffect;
   export default WAVES;
 } 
