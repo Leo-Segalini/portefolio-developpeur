@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import gsap from 'gsap';
@@ -372,12 +372,24 @@ export function useCarrotEffect(
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const controlsRef = useRef<OrbitControls | null>(null);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
+  // Effet pour initialiser les dimensions après le montage
+  useEffect(() => {
+    setDimensions({
+      width: options.width || window.innerWidth,
+      height: options.height || window.innerHeight
+    });
+  }, [options.width, options.height]);
 
   useEffect(() => {
-    if (elementRef.current) {
+    // Vérifier si nous sommes dans un environnement navigateur
+    if (typeof window === 'undefined') return;
+    
+    if (elementRef.current && dimensions.width && dimensions.height) {
       const currentElement = elementRef.current;
-      const width = options.width || window.innerWidth;
-      const height = options.height || window.innerHeight;
+      const width = dimensions.width;
+      const height = dimensions.height;
 
       // Configuration de base
       const renderer = new THREE.WebGLRenderer({ 
@@ -492,7 +504,7 @@ export function useCarrotEffect(
         controls.dispose();
       };
     }
-  }, [elementRef, options.width, options.height]);
+  }, [elementRef, dimensions]);
 
   return {
     scene: sceneRef.current,

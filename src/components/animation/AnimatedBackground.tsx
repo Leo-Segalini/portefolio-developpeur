@@ -1,16 +1,26 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { useCarrotEffect } from '@/hooks/useCarrotEffect';
+import dynamic from 'next/dynamic';
 
 interface AnimatedBackgroundProps {
   children: React.ReactNode;
 }
 
+// Import dynamique du hook pour éviter les problèmes de SSR
+const DynamicCarrotEffect = dynamic(
+  () => import('@/hooks/useCarrotEffect').then(mod => ({ default: mod.useCarrotEffect })),
+  { ssr: false }
+);
+
 export function AnimatedBackground({ children }: AnimatedBackgroundProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  useCarrotEffect(containerRef);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   return (
     <>
@@ -22,6 +32,7 @@ export function AnimatedBackground({ children }: AnimatedBackgroundProps) {
         transition={{ duration: 1 }}
         aria-hidden="true"
       />
+      {isMounted && <DynamicCarrotEffect elementRef={containerRef} />}
       <div className="relative z-0">
         {children}
       </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { useTheme } from '@/contexts/ThemeContext';
 
@@ -19,17 +19,29 @@ export function useBackgroundEffect(
   const frameIdRef = useRef<number>(0);
   const mouseRef = useRef({ x: 0, y: 0 });
   const { theme } = useTheme();
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   const { mouseControl = true } = options;
 
+  // Effet pour initialiser les dimensions après le montage
   useEffect(() => {
-    if (!elementRef.current) return;
+    setDimensions({
+      width: window.innerWidth,
+      height: window.innerHeight
+    });
+  }, []);
+
+  useEffect(() => {
+    // Vérifier si nous sommes dans un environnement navigateur
+    if (typeof window === 'undefined') return;
+    
+    if (!elementRef.current || !dimensions.width || !dimensions.height) return;
 
     const currentElement = elementRef.current;
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
       50,
-      window.innerWidth / window.innerHeight,
+      dimensions.width / dimensions.height,
       1,
       1000
     );
@@ -41,7 +53,7 @@ export function useBackgroundEffect(
 
     // Configuration du rendu
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(dimensions.width, dimensions.height);
     renderer.setClearColor(0x000000, 0);
     currentElement.appendChild(renderer.domElement);
 
@@ -161,15 +173,15 @@ export function useBackgroundEffect(
     // Gestionnaires d'événements
     const handleMouseMove = (event: MouseEvent) => {
       mouseRef.current = {
-        x: event.clientX - window.innerWidth / 2,
-        y: -(event.clientY - window.innerHeight / 2)
+        x: event.clientX - dimensions.width / 2,
+        y: -(event.clientY - dimensions.height / 2)
       };
     };
 
     const handleResize = () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.aspect = dimensions.width / dimensions.height;
       camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setSize(dimensions.width, dimensions.height);
     };
 
     // Initialisation des événements
@@ -207,7 +219,7 @@ export function useBackgroundEffect(
       });
       renderer.dispose();
     };
-  }, [elementRef, theme, mouseControl]);
+  }, [elementRef, dimensions, theme, mouseControl]);
 
   return {
     scene: sceneRef.current,
