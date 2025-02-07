@@ -8,9 +8,8 @@ interface AnimatedBackgroundProps {
   children: React.ReactNode;
 }
 
-// Import dynamique du hook pour éviter les problèmes de SSR
 const DynamicCarrotEffect = dynamic(
-  () => import('@/hooks/useCarrotEffect').then(mod => ({ default: mod.useCarrotEffect })),
+  () => import('./CarrotEffect').then((mod) => mod.CarrotEffect),
   { ssr: false }
 );
 
