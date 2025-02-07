@@ -232,10 +232,10 @@ class Carrot {
 class Pilot {
   mesh: THREE.Group;
   pilot: THREE.Group;
-  earPivotL: THREE.Object3D;
-  earPivotR: THREE.Object3D;
-  eye: THREE.Mesh;
-  eyeb: THREE.Mesh;
+  earPivotL: THREE.Object3D = new THREE.Object3D();
+  earPivotR: THREE.Object3D = new THREE.Object3D();
+  eye: THREE.Mesh = new THREE.Mesh();
+  eyeb: THREE.Mesh = new THREE.Mesh();
 
   constructor() {
     this.mesh = new THREE.Group();
@@ -304,13 +304,6 @@ class Pilot {
     body.add(seat);
 
     // Oreilles
-    this.earPivotL = new THREE.Object3D();
-    this.earPivotL.position.y = 2.5;
-    this.earPivotL.rotation.x = -Math.PI/2.25;
-
-    this.earPivotR = this.earPivotL.clone();
-    this.earPivotR.rotation.x = -Math.PI/3;
-
     const earGeo = new THREE.BoxGeometry(2, 6, 0.5);
     const earPositions = earGeo.getAttribute('position').array;
     earPositions[2 * 3] -= 0.5;
@@ -372,7 +365,7 @@ class Pilot {
 }
 
 export function useCarrotEffect(
-  elementRef: React.RefObject<HTMLElement | HTMLDivElement>,
+  elementRef: React.RefObject<HTMLElement | HTMLDivElement | null>,
   options: CarrotEffectOptions = {}
 ) {
   const sceneRef = useRef<THREE.Scene | null>(null);

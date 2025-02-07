@@ -9,7 +9,7 @@ interface AnimatedBackgroundProps {
 }
 
 export function AnimatedBackground({ children }: AnimatedBackgroundProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
   useCarrotEffect(containerRef);
 
   return (

@@ -9,7 +9,7 @@ interface BackgroundEffectOptions {
 }
 
 export function useBackgroundEffect(
-  elementRef: React.RefObject<HTMLElement>,
+  elementRef: React.RefObject<HTMLElement | HTMLDivElement | null>,
   options: BackgroundEffectOptions = {}
 ) {
   const sceneRef = useRef<THREE.Scene | null>(null);
