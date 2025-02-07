@@ -67,11 +67,10 @@ export function Navbar() {
     <div className="fixed top-0 left-0 right-0 flex justify-center z-50 pt-10">
       <nav
         className={`w-[750px] transition-all duration-300 border-2 border-white-light dark:border-white-dark 
-                   md:${isScrolled
+                   ${isScrolled
                      ? 'bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-lg shadow-lg'
-                     : 'bg-transparent'
+                     : 'bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-lg shadow-lg md:bg-transparent md:dark:bg-transparent md:backdrop-blur-none md:shadow-none'
                    }
-                   bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-lg shadow-lg md:bg-transparent md:dark:bg-transparent md:backdrop-filter-none md:shadow-none
                    ${isOpen ? 'rounded-xl md:rounded-full' : 'rounded-full'}`}
       >
         <div className="container mx-auto px-8">
