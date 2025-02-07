@@ -8,7 +8,7 @@ import { AnimatedSection } from '@/components/animation/AnimatedSection';
 import { TechCarousel } from '@/components/ui/TechCarousel';
 import { AnimatedBackground } from '@/components/animation/AnimatedBackground';
 import { ThemeSelector } from '@/components/theme/ThemeSelector';
-import { ContactForm } from '@/components/ContactForm';
+import { ContactForm } from '@/components/contact/ContactForm';
 
 const technologies = {
   'Frontend': [
@@ -430,7 +430,7 @@ export default function Home() {
                             className="block text-text-light dark:text-text-dark hover:text-primary 
                                      dark:hover:text-primary-dark transition-colors"
                           >
-                            🇫�� +33 6 70 96 33 71
+                            🇫🇷 +33 6 70 96 33 71
                           </a>
                           <a
                             href="tel:+262693932265"
