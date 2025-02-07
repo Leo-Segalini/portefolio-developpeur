@@ -20,6 +20,7 @@
     "generate-cv": "node scripts/generatePDF.js"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@heroicons/react": "^2.2.0",
     "framer-motion": "^12.0.3",
     "gsap": "^3.12.7",

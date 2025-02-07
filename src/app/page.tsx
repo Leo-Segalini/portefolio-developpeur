@@ -8,6 +8,7 @@ import { AnimatedSection } from '@/components/animation/AnimatedSection';
 import { TechCarousel } from '@/components/ui/TechCarousel';
 import { AnimatedBackground } from '@/components/animation/AnimatedBackground';
 import { ThemeSelector } from '@/components/theme/ThemeSelector';
+import { ContactForm } from '@/components/ContactForm';
 
 const technologies = {
   'Frontend': [
@@ -413,7 +414,7 @@ export default function Home() {
                   Me Contacter
                 </h2>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 text-center md:text-start ">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                   {/* Informations de contact */}
                   <div className="space-y-6">
                     <h3 className="text-xl font-semibold mb-4 text-text-light dark:text-text-dark">
@@ -429,9 +430,9 @@ export default function Home() {
                             className="block text-text-light dark:text-text-dark hover:text-primary 
                                      dark:hover:text-primary-dark transition-colors"
                           >
-                            🇫🇷 +33 6 70 96 33 71
-        </a>
-        <a
+                            🇫�� +33 6 70 96 33 71
+                          </a>
+                          <a
                             href="tel:+262693932265"
                             className="block text-text-light dark:text-text-dark hover:text-primary 
                                      dark:hover:text-primary-dark transition-colors"
@@ -462,109 +463,9 @@ export default function Home() {
                   </div>
 
                   {/* Formulaire de contact */}
-                  <form
-                    action={`https://formsubmit.co/${encodeURIComponent('leo.segalini@outlook.com')}`}
-                    method="POST"
-                    className="space-y-6"
-                  >
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label htmlFor="firstname" className="block text-sm font-medium text-text-light dark:text-text-dark mb-2">
-                          Prénom
-                        </label>
-                        <input
-                          type="text"
-                          id="firstname"
-                          name="firstname"
-                          required
-                          className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 
-                                   bg-white dark:bg-gray-800 text-text-light dark:text-text-dark
-                                   focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark focus:border-transparent
-                                   transition-colors"
-                        />
-                      </div>
-                      <div>
-                        <label htmlFor="lastname" className="block text-sm font-medium text-text-light dark:text-text-dark mb-2">
-                          Nom
-                        </label>
-                        <input
-                          type="text"
-                          id="lastname"
-                          name="lastname"
-                          required
-                          className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 
-                                   bg-white dark:bg-gray-800 text-text-light dark:text-text-dark
-                                   focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark focus:border-transparent
-                                   transition-colors"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label htmlFor="phone" className="block text-sm font-medium text-text-light dark:text-text-dark mb-2">
-                        Téléphone
-                      </label>
-                      <input
-                        type="tel"
-                        id="phone"
-                        name="phone"
-                        required
-                        className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 
-                                 bg-white dark:bg-gray-800 text-text-light dark:text-text-dark
-                                 focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark focus:border-transparent
-                                 transition-colors"
-                      />
-                    </div>
-
-                    <div>
-                      <label htmlFor="email" className="block text-sm font-medium text-text-light dark:text-text-dark mb-2">
-                        Email
-                      </label>
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        required
-                        className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 
-                                 bg-white dark:bg-gray-800 text-text-light dark:text-text-dark
-                                 focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark focus:border-transparent
-                                 transition-colors"
-                      />
-                    </div>
-
-                    <div>
-                      <label htmlFor="message" className="block text-sm font-medium text-text-light dark:text-text-dark mb-2">
-                        Description du projet
-                      </label>
-                      <textarea
-                        id="message"
-                        name="message"
-                        rows={6}
-                        required
-                        className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 
-                                 bg-white dark:bg-gray-800 text-text-light dark:text-text-dark
-                                 focus:ring-2 focus:ring-primary dark:focus:ring-primary-dark focus:border-transparent
-                                 transition-colors resize-none"
-                      />
-                    </div>
-
-                    <button
-                      type="submit"
-                      className="w-full px-6 py-3 bg-primary dark:bg-primary-dark text-white rounded-lg
-                               hover:bg-primary/90 dark:hover:bg-primary-dark/90 transition-colors
-                               focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-primary-dark"
-                    >
-                      Envoyer le message
-                    </button>
-
-                    {/* Champs cachés pour FormSubmit.co */}
-                    <input type="hidden" name="_subject" value="Nouveau message du portfolio" />
-                    <input type="hidden" name="_template" value="table" />
-                    <input type="hidden" name="_captcha" value="true" />
-                    <input type="hidden" name="_next" value={typeof window !== 'undefined' ? window.location.href : ''} />
-                  </form>
+                  <ContactForm />
                 </div>
-    </div>
+              </div>
             </section>
           </AnimatedBackground>
         </motion.div>
